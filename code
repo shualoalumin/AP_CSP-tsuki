@@ -1,0 +1,39 @@
+onEvent("btn4", "click", function() {
+  generate(4);
+});
+
+onEvent("btn8", "click", function() {
+  generate(8);
+});
+
+function generate(length) {
+  var name = getText("nameInput");
+  var fav = getText("favInput");
+  var age = getText("ageInput");
+
+  if (name == "") { name = "_"; } else { name = name; }
+  if (fav == "")  { fav = "_";  } else { fav = fav;   }
+  if (age == "")  { age = "_";  } else { age = age;   }
+
+  var password = "";
+  password += name[randomNumber(0, name.length - 1)];
+  password += fav[randomNumber(0, fav.length - 1)];
+  password += age[randomNumber(0, age.length - 1)];
+
+  var combined = name + fav + age;
+  var charList = [];
+  for (var i = 0; i < combined.length; i++) {
+    appendItem(charList, combined[i]);
+  }
+  for (var j = password.length; j < length; j++) {
+    var index = randomNumber(0, charList.length - 1);
+    password += charList[index];
+  }
+
+  setText("resultText", "Your password: " + password);
+  setScreen("screen2");
+}
+
+onEvent("backBtn", "click", function() {
+  setScreen("screen1");
+});
