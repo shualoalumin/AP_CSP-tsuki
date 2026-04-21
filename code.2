@@ -1,0 +1,62 @@
+// When the "4-digit" button is clicked, generate a 4-character password
+// "4자리" 버튼 클릭 → 4자리 비밀번호 생성
+onEvent("digit4", "click", function() {
+  generatePassword(4);
+});
+
+// When the "8-digit" button is clicked, generate an 8-character password
+// "8자리" 버튼 클릭 → 8자리 비밀번호 생성
+onEvent("digit8", "click", function() {
+  generatePassword(8);
+});
+
+// Function: generatePassword
+// Generates a password using user inputs and a specified length
+// 사용자 입력을 기반으로 지정된 길이의 비밀번호를 생성하는 함수 (abstraction)
+function generatePassword(length) {
+
+  // Get input values, replace spaces with "_", and use "_" if empty
+  // 입력값 가져오기 + 공백을 "_"로 변환 + 비어있으면 "_" 사용
+  var name = getText("yourlovelyname").replace(/ /g, "_") || "_";
+  var fav  = getText("yourfvt").replace(/ /g, "_") || "_";
+  var age  = getText("yourage").replace(/ /g, "_") || "_";
+
+  // Initialize an empty string to store the password
+  // 비밀번호를 저장할 빈 문자열 초기화
+  var password = "";
+
+  // Step 1: Ensure at least one character from each input is included
+  // 단계 1: 각 입력값에서 최소 1개 문자 포함시키기
+  password += name[randomNumber(0, name.length - 1)];
+  password += fav[randomNumber(0, fav.length - 1)];
+  password += age[randomNumber(0, age.length - 1)];
+
+  // Combine all inputs into one string
+  // 모든 입력값을 하나로 결합
+  var combined = name + fav + age;
+
+  // Create a list of characters from the combined string
+  // 결합된 문자열을 문자 리스트로 변환
+  var charList = [];
+  for (var i = 0; i < combined.length; i++) {
+    appendItem(charList, combined[i]);
+  }
+
+  // Step 2: Fill the remaining length with random characters
+  // 단계 2: 남은 길이를 랜덤 문자로 채우기 (iteration + selection)
+  for (var j = password.length; j < length; j++) {
+    var index = randomNumber(0, charList.length - 1);
+    password += charList[index];
+  }
+
+  // Display the result and switch to the result screen
+  // 결과 출력 후 화면 전환
+  setText("resultText", "Your password: " + password);
+  setScreen("screen2");
+}
+
+// When the "back" button is clicked, return to the first screen
+// "뒤로가기" 버튼 → 첫 화면으로 이동
+onEvent("back", "click", function() {
+  setScreen("screen1");
+});
